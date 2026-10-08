@@ -1,6 +1,7 @@
 # Who's Walking Who
 
 Vite app. Leaderboard on Supabase (tables `players`, `breed_bests`, function `submit_game`),
+plus community posts, comments, ratings and shares (see `supabase/RLS_GUIDE.md`),
 hosted on Vercel. Public keys are in `src/config.js`.
 
 - Local: `npm install && npm run dev`
