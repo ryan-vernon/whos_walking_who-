@@ -4,7 +4,7 @@ Files:
 
 - `migrations/20261008130000_community_posts.sql` tables, grants, policies, storage bucket, functions
 - `seed.sql` five demo accounts with posts, comments, ratings and shares
-- `tests/rls_checks.sql` 76 checks that act as each role and roll back
+- `tests/rls_checks.sql` 74 checks that act as each role and roll back
 
 ## Applying it
 
@@ -20,7 +20,7 @@ The hosted project already has two migrations (`leaderboard_schema`, `pair_likes
    where email = 'you@example.com';
    ```
 
-Seed logins all use the password `password123`: alice, ben, chloe, dev (banned) and admin, each `@example.com`.
+Seed accounts are alice, ben, chloe, dev (banned) and admin, each `@example.com`. Their passwords are random, since the seed runs on the live project; set one in Authentication > Users to sign in as them.
 
 ## Who can do what
 

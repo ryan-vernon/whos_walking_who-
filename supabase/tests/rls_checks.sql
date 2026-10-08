@@ -58,6 +58,8 @@ begin
 end $$;
 
 -- Two uploaded photos for Alice and one for Ben (normally the Storage API does this).
+-- Supabase blocks SQL deletes on storage.objects (a trigger insists on the
+-- Storage API), so the photo delete policies are not checked here.
 insert into storage.objects (bucket_id, name, owner_id) values
   ('question-photos', 'uploads/alice-dog.jpg',   'a0000000-0000-4000-8000-00000000000a'),
   ('question-photos', 'uploads/alice-owner.jpg', 'a0000000-0000-4000-8000-00000000000a'),
@@ -158,8 +160,6 @@ select pg_temp.ok('alice cannot upload outside uploads/',
   pg_temp.fails($q$insert into storage.objects (bucket_id, name, owner_id) values ('question-photos', 'other/new.png', 'a0000000-0000-4000-8000-00000000000a')$q$));
 select pg_temp.ok('alice cannot upload a non-image',
   pg_temp.fails($q$insert into storage.objects (bucket_id, name, owner_id) values ('question-photos', 'uploads/run.exe', 'a0000000-0000-4000-8000-00000000000a')$q$));
-select pg_temp.ok('alice cannot delete Ben''s photo (0 rows)',
-  pg_temp.n($q$delete from storage.objects where name = 'uploads/ben-dog.jpg'$q$) = 0);
 
 -- chloe ---------------------------------------------------------------------
 select pg_temp.act_as('chloe');
@@ -200,8 +200,6 @@ select pg_temp.ok('admin unhides Ben''s question',
   pg_temp.n($q$update public.user_questions set status = 'published' where id = '10000000-0000-4000-8000-000000000004'$q$) = 1);
 select pg_temp.ok('admin deletes anyone''s comment',
   pg_temp.n($q$delete from public.comments where id = '20000000-0000-4000-8000-000000000004'$q$) = 1);
-select pg_temp.ok('admin deletes anyone''s photo',
-  pg_temp.n($q$delete from storage.objects where name = 'uploads/ben-dog.jpg'$q$) = 1);
 select pg_temp.ok('admin unbans dev',
   not pg_temp.fails($q$select public.admin_set_banned('d0000000-0000-4000-8000-00000000000d', false)$q$));
 
@@ -210,4 +208,5 @@ select pg_temp.ok('unbanned dev can comment again',
   pg_temp.n($q$insert into public.comments (pair_id, body) values ('golden-1', 'back')$q$) = 1);
 
 reset role;
+select 'all checks passed' as result;
 rollback;

@@ -2,7 +2,11 @@
 -- (it runs as postgres, which bypasses RLS) after the migration.
 -- Safe to run twice: every row has a fixed id and skips on conflict.
 --
--- Five sign-in accounts, all with the password  password123
+-- Five accounts. Their passwords are random and never printed, because this
+-- seed also runs on the live project and a known password on the admin
+-- account would hand anyone full access. To sign in as one, set a password
+-- under Authentication > Users in the dashboard. To check what each one can
+-- see without signing in, run tests/rls_checks.sql.
 --   alice@example.com  Alice   2 published questions
 --   ben@example.com    Ben     1 published, 1 hidden by the admin
 --   chloe@example.com  Chloe   1 published
@@ -19,7 +23,7 @@ insert into auth.users (
   confirmation_token, recovery_token, email_change_token_new, email_change
 )
 select '00000000-0000-0000-0000-000000000000', u.id, 'authenticated', 'authenticated', u.email,
-       extensions.crypt('password123', extensions.gen_salt('bf')), now(),
+       extensions.crypt(gen_random_uuid()::text, extensions.gen_salt('bf')), now(),
        u.app_meta, jsonb_build_object('display_name', u.name), now(), now(),
        '', '', '', ''
 from (values
