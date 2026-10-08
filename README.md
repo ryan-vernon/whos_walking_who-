@@ -1,7 +1,7 @@
 # Who's Walking Who
 
 Vite app. Leaderboard on Supabase (tables `players`, `breed_bests`, function `submit_game`),
-plus community posts, comments, ratings and shares (see `supabase/RLS_GUIDE.md`),
+plus community posts, comments, ratings and shares (see `supabase/migrations`),
 hosted on Vercel. Public keys are in `src/config.js`.
 
 - Local: `npm install && npm run dev`
@@ -9,4 +9,4 @@ hosted on Vercel. Public keys are in `src/config.js`.
 - To update the live site from git, connect this folder's GitHub repo to the Vercel project `whos-walking-who`.
 - Accounts use Supabase Auth (email and password). Signing in unlocks the Community tab (post a dog and owner,
   rate, comment, share), comments and sharing on game rounds, the community leaderboard, and the account page.
-  Make an account an admin with the SQL in `supabase/RLS_GUIDE.md`; admins see every player's rows on the account page.
+  Make an account an admin by setting `app_metadata.role` to `admin` on its auth user; admins see every player's rows on the account page.
